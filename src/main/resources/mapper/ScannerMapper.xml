@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.faceos.springbootmybatiscode.dao.ScanerDao">
+    <resultMap id="BaseResultMap" type="com.faceos.springbootmybatiscode.domain.CodeScanner">
+        <result column="app_id" property="appId"/>
+        <result column="app_ver" property="appVer"/>
+        <result column="device_id" property="deviceId"/>
+        <result column="device_name" property="deviceName"/>
+        <result column="device_status" property="deviceStatus"/>
+        <result column="dsn" property="dsn"/>
+        <result column="gateway_id" property="gatewayId"/>
+        <result column="mac" property="mac"/>
+        <result column="online_status" property="onlineStatus"/>
+        <result column="regist_datetime" property="registeTime"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="obligate" property="obligate"/>
+    </resultMap>
+
+    <parameterMap id="CodeScanner" type="com.faceos.springbootmybatiscode.domain.CodeScanner"/>
+
+    <sql id="Base_Column_List">
+        app_id,app_ver,device_id,device_name,device_status,dsn,gateway_id,mac,online_status,regist_datetime,is_delete,obligate
+    </sql>
+
+    <insert id="insert" parameterMap="CodeScanner">
+        insert into
+        code_scanner(<include refid="Base_Column_List"/>)
+        values
+        (#{appId},#{appVer},#{deviceId},#{deviceName},#{deviceStatus},#{dsn},#{gatewayId},#{mac},#{onlineStatus},#{registeTime},#{isDelete},#{obligate})
+    </insert>
+
+    <insert id="bindScanByClient" parameterType="Map">
+        insert into
+        m_client_scanner(client_id,dsn)
+        values
+        (#{id},#{dsn})
+    </insert>
+
+    <update id="updateScanName">
+        update code_scanner
+        set obligate = #{name}
+        where dsn = #{dsn}
+    </update>
+
+    <insert id="bindScanners" >
+        insert into
+        m_client_scanner(client_id,dsn)
+        values
+        <foreach collection="devs" item="dev" separator=",">
+            (#{clientId},#{dev})
+        </foreach>
+    </insert>
+
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from code_scanner
+        where dsn=#{devId}
+    </select>
+
+    <select id="findByClientId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT app_id,app_ver,device_id,device_name,device_status,cs.dsn,gateway_id,mac,online_status,regist_datetime,is_delete,obligate
+        from m_client_scanner m LEFT JOIN code_scanner cs ON m.dsn=cs.dsn
+        WHERE m.client_id=#{clientId};
+    </select>
+
+    <select id="getBind" resultType="java.util.Map">
+        select * from
+        m_client_scanner
+        where client_id=#{clientId} and dsn=#{dsn}
+    </select>
+
+    <delete id="deleteBind">
+        delete from
+        m_client_scanner
+        where client_id=#{clientId} and dsn=#{dsn}
+    </delete>
+
+    <delete id="deleteBindsByClientId" parameterType="java.lang.Integer">
+        delete from
+        m_client_scanner
+        where client_id=#{clientId}
+    </delete>
+
+</mapper>

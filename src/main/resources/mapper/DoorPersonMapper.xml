@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.faceos.springbootmybatiscode.dao.DoorPersonDao">
+    <resultMap id="BaseResultMap" type="com.faceos.springbootmybatiscode.domain.DoorPerson">
+        <result column="person_name" property="personName"/>
+        <result column="phone_no" property="phoneNo"/>
+        <result column="person_address" property="personAddress"/>
+        <result column="person_company" property="personCompany"/>
+        <result column="memo" property="memo"/>
+        <result column="pic_id" property="picId"/>
+        <result column="IS_DELETE" property="isDelete"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user_name" property="updateUserName"/>
+        <result column="source_id" property="sourceId"/>
+        <result column="open_id" property="openId"/>
+        <result column="region_id" property="regionId"/>
+        <result column="audit_status" property="auditStatus"/>
+        <result column="client_id" property="clientId"/>
+        <result column="finger_data" property="fingerData"/>
+    </resultMap>
+
+    <parameterMap id="DoorPerson" type="com.faceos.springbootmybatiscode.domain.DoorPerson"/>
+
+    <sql id="Base_Column_List">
+        person_name,phone_no,person_address,person_company,memo,pic_id,IS_DELETE,CREATE_TIME,update_time,update_user_name,source_id,open_id,region_id,audit_status,client_id,finger_data
+    </sql>
+
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from of_door_person
+        where id = #{id}
+    </select>
+
+</mapper>
