@@ -9,6 +9,7 @@ import com.faceos.springbootmybatiscode.service.impl.PersonServiceImpl;
 import com.faceos.springbootmybatiscode.service.impl.ScannerServiceImpl;
 import com.faceos.springbootmybatiscode.utils.ApplicationContextProvider;
 import com.faceos.springbootmybatiscode.utils.HttpClientUtils;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * Test
@@ -26,6 +28,12 @@ import java.util.Map;
  * @date 2019-07-09
  */
 public class CustomTest {
+    private static ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+            .setNameFormat("demo-pool-%d").build();
+
+    private static ExecutorService pool = new ThreadPoolExecutor(5, 10,
+            50L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
 
     @Test
     public void testJson(){
@@ -44,6 +52,13 @@ public class CustomTest {
         System.out.println("测试");
         System.out.println(qrcode);
 
+    }
+
+    @Test
+    public void testConcurrent() {
+        for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            pool.execute(new SubThread());
+        }
     }
 
     @Test
@@ -83,5 +98,16 @@ public class CustomTest {
         List<String> list = Arrays.asList("a","b","c","d");
         String str = String.join(",",list);
         System.out.println(str);
+    }
+}
+class SubThread implements Runnable {
+    @Override
+    public void run() {
+        try {
+            System.out.println(Thread.currentThread().getName() + "正在执行。。。");
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            //do nothing
+        }
     }
 }

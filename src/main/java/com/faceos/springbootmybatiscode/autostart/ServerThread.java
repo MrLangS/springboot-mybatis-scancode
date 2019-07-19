@@ -70,7 +70,8 @@ public class ServerThread implements Runnable {
             StringBuffer strbuf = new StringBuffer();
             int n;
             int i = 1;
-            while (true) {
+            boolean done = true;
+            while (done) {
 
                 while ((n = ins.read(buffer)) > 0) {
                     strbuf.append(new String(buffer, 0, n));
@@ -80,11 +81,18 @@ public class ServerThread implements Runnable {
                     strbuf.delete(0, strbuf.length());
                     i++;
                 }
+                try {
+                    socket.sendUrgentData(0xFF);
+                } catch (IOException e) {
+                    //如果抛出了异常，那么就是断开连接了 跳出无限循环
+                    done= false;
+                }
 
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            logger.info("socket连接断开!");
             try {
                 if (ins != null) {
                     ins.close();
@@ -218,7 +226,7 @@ public class ServerThread implements Runnable {
         try {
             qrcode = codedata.getJSONObject("data").getJSONObject("qrcode");
         } catch (Exception e) {
-            logger.error("二维码数据格式不正确:[{}]",e);
+            logger.error("二维码数据格式不正确:",e);
         }
         String backmsg = null;
 
