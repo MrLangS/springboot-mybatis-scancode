@@ -85,6 +85,7 @@ public class ServerThread implements Runnable {
                     socket.sendUrgentData(0xFF);
                 } catch (IOException e) {
                     //如果抛出了异常，那么就是断开连接了 跳出无限循环
+                    logger.warn("socket连接断开!");
                     done= false;
                 }
 
@@ -92,7 +93,6 @@ public class ServerThread implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            logger.info("socket连接断开!");
             try {
                 if (ins != null) {
                     ins.close();

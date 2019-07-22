@@ -33,7 +33,7 @@ public class StartService  implements ApplicationRunner {
      */
     private static ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
             .setNameFormat("Thread-Pool-%d").build();
-    private static ExecutorService pool = new ThreadPoolExecutor(5, 7,
+    private static ExecutorService pool = new ThreadPoolExecutor(5, 5,
             30L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(100), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
 
