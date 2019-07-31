@@ -73,17 +73,17 @@ public class ServerThread implements Runnable {
             boolean done = true;
             while (done) {
 
-                while ((n = ins.read(buffer)) > 0) {
-                    strbuf.append(new String(buffer, 0, n));
-
-                    logger.info("第[{}]次获取包", i);
-                    processData(strbuf.toString(), out);
-                    strbuf.delete(0, strbuf.length());
-                    i++;
-                }
                 try {
+                    while ((n = ins.read(buffer)) > 0) {
+                        strbuf.append(new String(buffer, 0, n));
+
+                        logger.info("第[{}]次获取包", i);
+                        processData(strbuf.toString(), out);
+                        strbuf.delete(0, strbuf.length());
+                        i++;
+                    }
                     socket.sendUrgentData(0xFF);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     //如果抛出了异常，那么就是断开连接了 跳出无限循环
                     logger.warn("socket连接断开!");
                     done= false;
@@ -115,6 +115,7 @@ public class ServerThread implements Runnable {
      */
     private void processData(String dataStr, OutputStream out) throws IOException {
 
+        logger.info("获取到的数据为>>>[{}]",dataStr);
         String[] strArr = dataStr.split("&");
         JSONObject jbj = strArr2Json(strArr);
         String data = jbj.getString("data");

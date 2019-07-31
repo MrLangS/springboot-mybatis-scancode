@@ -38,7 +38,7 @@ public class CustomTest {
     @Test
     public void testJson(){
 
-        String str = "{\"cmd\":10002,\"data\":{\"auth\":1,\"qrcode\":\"eewfrwtr234234\",\"dsn\":\"9f04f0db20ab847e0c0b373970aa97e4\"}";
+        /*String str = "{\"cmd\":10002,\"data\":{\"auth\":1,\"qrcode\":\"eewfrwtr234234\",\"dsn\":\"9f04f0db20ab847e0c0b373970aa97e4\"}";
         JSONObject qrcode = null;
         try {
             JSONObject jbj = JSONObject.parseObject(str);
@@ -50,7 +50,12 @@ public class CustomTest {
 
 
         System.out.println("测试");
-        System.out.println(qrcode);
+        System.out.println(qrcode);*/
+        JSONObject obj = new JSONObject();
+        String item = "test=1234=56";
+        int index = item.indexOf("=");
+        obj.put(item.substring(0,index),item.substring(index + 1));
+        System.out.println(obj.toJSONString());
 
     }
 

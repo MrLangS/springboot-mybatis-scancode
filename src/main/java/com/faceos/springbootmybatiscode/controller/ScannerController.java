@@ -36,14 +36,15 @@ public class ScannerController {
     @GetMapping(value = "smart/get_ip")
     public Result getIpAndPort(@RequestParam(value = "dsn") String dsn) {
         Map data = new HashMap<String,Object>(2);
-        data.put("ip","");
-        data.put("port",0);
-        if (scannerService.findById(dsn) != null) {
+        data.put("ip",ip);
+        data.put("port",port);
+        /*if (scannerService.findById(dsn) != null) {
             data.put("ip",ip);
             data.put("port",port);
             return Result.success(data, 0, "ok");
         }
-        return Result.error(data,405);
+        return Result.error(data,405);*/
+        return Result.success(data, 0, "ok");
     }
 
     @RequestMapping(value = "api/scanner", method = RequestMethod.POST)
