@@ -27,10 +27,10 @@ public class StartService  implements ApplicationRunner {
 
     @Value("${socket.server.port}")
     private int port;
-    @Value("socket.server.corePoolSize")
-    private static int corePoolSize;
-    @Value("socket.server.maximumPoolSize")
-    private static int maximumPoolSize;
+    @Value("${socket.server.corePoolSize}")
+    private int corePoolSize;
+    @Value("${socket.server.maximumPoolSize}")
+    private int maximumPoolSize;
 
 
     /**
@@ -38,7 +38,7 @@ public class StartService  implements ApplicationRunner {
      */
     private static ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
             .setNameFormat("Thread-Pool-%d").build();
-    private static ExecutorService pool = new ThreadPoolExecutor(corePoolSize, maximumPoolSize,
+    private static ExecutorService pool = new ThreadPoolExecutor(6, 6,
             30L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(100), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
 
@@ -55,7 +55,7 @@ public class StartService  implements ApplicationRunner {
 
             //使用循环方式一直等待客户端连接
             while (true) {
-                if (((ThreadPoolExecutor)pool).getActiveCount() < 6) {
+                if (((ThreadPoolExecutor)pool).getActiveCount() < maximumPoolSize) {
                     logger.info("当前活动线程数:[{}]",((ThreadPoolExecutor)pool).getActiveCount());
                     Socket accept = serverSocket.accept();
                     logger.info("客户端IP：" + accept.getRemoteSocketAddress());
